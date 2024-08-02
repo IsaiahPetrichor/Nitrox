@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Linq;
 using System.Runtime.Serialization;
 using System.Security.Permissions;
@@ -15,7 +15,10 @@ public class NitroxId : ISerializable, IEquatable<NitroxId>, IComparable<NitroxI
 {
     [DataMember(Order = 1)]
     [SerializableMember]
-    private Guid guid { get; init; }
+    private Guid guid
+    {
+        get; init;
+    }
 
     [IgnoreConstructor]
     public NitroxId()
@@ -78,7 +81,7 @@ public class NitroxId : ISerializable, IEquatable<NitroxId>, IComparable<NitroxI
         {
             return false;
         }
-        
+
         if (obj.GetType() != GetType())
         {
             return false;
@@ -87,7 +90,6 @@ public class NitroxId : ISerializable, IEquatable<NitroxId>, IComparable<NitroxI
         return Equals((NitroxId)obj);
     }
 
-        
     public bool Equals(NitroxId other)
     {
         if (ReferenceEquals(null, other))
@@ -102,7 +104,7 @@ public class NitroxId : ISerializable, IEquatable<NitroxId>, IComparable<NitroxI
 
         return guid.Equals(other.guid);
     }
-        
+
     public override int GetHashCode()
     {
         return guid.GetHashCode();

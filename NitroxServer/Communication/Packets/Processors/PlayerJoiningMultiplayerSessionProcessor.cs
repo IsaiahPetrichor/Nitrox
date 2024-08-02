@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using Newtonsoft.Json;
 using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.DataStructures.GameLogic.Entities;
@@ -57,7 +58,8 @@ namespace NitroxServer.Communication.Packets.Processors
 
             List<SimulatedEntity> simulations = world.EntitySimulation.AssignGlobalRootEntitiesAndGetData(player);
 
-            player.Entity = wasBrandNewPlayer ? SetupPlayerEntity(player) : RespawnExistingEntity(player); ;
+            player.Entity = wasBrandNewPlayer ? SetupPlayerEntity(player) : RespawnExistingEntity(player);
+            ;
 
             List<GlobalRootEntity> globalRootEntities = world.WorldEntityManager.GetGlobalRootEntities(true);
             bool isFirstPlayer = playerManager.GetConnectedPlayers().Count == 1;
@@ -85,6 +87,8 @@ namespace NitroxServer.Communication.Packets.Processors
                 BuildingManager.GetEntitiesOperations(globalRootEntities)
             );
 
+            Log.Info("Sending initial Player Sync packet");
+
             player.SendPacket(initialPlayerSync);
         }
 
@@ -98,7 +102,7 @@ namespace NitroxServer.Communication.Packets.Processors
         {
             NitroxTransform transform = new(player.Position, player.Rotation, NitroxVector3.One);
 
-            PlayerWorldEntity playerEntity = new PlayerWorldEntity(transform, 0, null, false, player.GameObjectId, NitroxTechType.None, null, null, new List<Entity>());
+            PlayerWorldEntity playerEntity = new(transform, 0, null, false, player.GameObjectId, NitroxTechType.None, null, null, new List<Entity>());
             entityRegistry.AddOrUpdate(playerEntity);
             world.WorldEntityManager.TrackEntityInTheWorld(playerEntity);
             return playerEntity;
@@ -108,6 +112,7 @@ namespace NitroxServer.Communication.Packets.Processors
         {
             if (entityRegistry.TryGetEntityById(player.PlayerContext.PlayerNitroxId, out PlayerWorldEntity playerWorldEntity))
             {
+                Log.Info($"Re-spawning PlayerWorldEntity: {JsonConvert.SerializeObject(playerWorldEntity)}");
                 return playerWorldEntity;
             }
             Log.Error($"Unable to find player entity for {player.Name}. Re-creating one");

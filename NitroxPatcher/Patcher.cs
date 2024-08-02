@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
@@ -128,7 +128,7 @@ internal static class Patcher
         Log.Info("Patching Subnautica...");
 
         // Enabling this creates a log file on your desktop (why there?), showing the emitted IL instructions.
-        HarmonyFileLog.Enabled = false;
+        HarmonyFileLog.Enabled = true;
 
         foreach (IPersistentPatch patch in container.Resolve<IEnumerable<IPersistentPatch>>())
         {

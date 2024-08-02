@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization;
 
@@ -8,11 +8,11 @@ namespace NitroxServer.GameLogic.Players
     public class PlayerData
     {
         [DataMember(Order = 1)]
-        public List<PersistedPlayerData> Players = new List<PersistedPlayerData>();
+        public List<PersistedPlayerData> Players = new();
 
         public List<Player> GetPlayers()
         {
-            return Players.Select(playerData => playerData.ToPlayer()).ToList();
+            return Players.ConvertAll(playerData => playerData.ToPlayer());
         }
 
         public static PlayerData From(IEnumerable<Player> players)

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using NitroxModel.Core;
 using NitroxModel.Packets;
@@ -48,6 +48,7 @@ namespace NitroxServer.Communication.Packets
             {
                 try
                 {
+                    Log.Info(processor.ToString());
                     processor.ProcessPacket(packet, player);
                 }
                 catch (Exception ex)

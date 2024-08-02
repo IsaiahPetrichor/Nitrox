@@ -1,4 +1,8 @@
-﻿using NitroxModel.DataStructures.GameLogic;
+using System;
+using System.Collections.Generic;
+using Newtonsoft.Json;
+using NitroxModel.DataStructures.GameLogic;
+using NitroxModel.DataStructures.GameLogic.Entities.Metadata;
 using NitroxModel.DataStructures.Util;
 using NitroxModel.Packets;
 using NitroxServer.Communication.Packets.Processors.Abstract;
@@ -24,6 +28,30 @@ namespace NitroxServer.Communication.Packets.Processors
 
             if (entity.HasValue)
             {
+                if (entity.Value.Metadata.GetType() == typeof(PlayerMetadata))
+                {
+                    PlayerMetadata playerMetadata = (PlayerMetadata)packet.NewValue;
+
+                    Log.Info($"Player {sendingPlayer.Name}'s equipped items: {JsonConvert.SerializeObject(playerMetadata.EquippedItems)}");
+                    playerMetadata.EquippedItems.ForEach(equippedItem =>
+                    {
+                        EquippedItemData itemData = new(null, equippedItem.Id, null, equippedItem.Slot, equippedItem.TechType);
+
+                        sendingPlayer.GetEquipment().ForEach(equippedItem =>
+                        {
+                            if (!equippedItem.Equals(itemData))
+                            {
+                                Log.Info($"{equippedItem.ToString()} does not equal {itemData.ToString()}");
+                                sendingPlayer.AddEquipment((itemData));
+                            }
+                            else
+                            {
+                                Log.Info($"De-sync, player already has that equipped.");
+                            }
+                        });
+                    });
+                }
+
                 entity.Value.Metadata = packet.NewValue;
                 SendUpdateToVisiblePlayers(packet, sendingPlayer, entity.Value);
             }

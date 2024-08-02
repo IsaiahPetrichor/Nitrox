@@ -25,7 +25,11 @@ namespace NitroxServer.GameLogic
         private readonly ThreadSafeSet<string> reservedPlayerNames = new("Player"); // "Player" is often used to identify the local player and should not be used by any user
 
         private ThreadSafeQueue<KeyValuePair<INitroxConnection, MultiplayerSessionReservationRequest>> JoinQueue { get; set; } = new();
-        private bool PlayerCurrentlyJoining { get; set; }
+
+        private bool PlayerCurrentlyJoining
+        {
+            get; set;
+        }
 
         private Timer initialSyncTimer;
 
@@ -134,7 +138,6 @@ namespace NitroxServer.GameLogic
 
             InitialSyncTimerData timerData = new InitialSyncTimerData(connection, authenticationContext, serverConfig.InitialSyncTimeout);
             initialSyncTimer = new Timer(InitialSyncTimerElapsed, timerData, 0, 200);
-
 
             return new MultiplayerSessionReservation(correlationId, playerId, reservationKey);
         }
@@ -341,7 +344,7 @@ namespace NitroxServer.GameLogic
                 .Where(assetPackage => assetPackage.Player != null)
                 .Select(assetPackage => assetPackage.Player);
         }
-        
+
         public void BroadcastPlayerJoined(Player player)
         {
             PlayerJoinedMultiplayerSession playerJoinedPacket = new(player.PlayerContext, player.SubRootId, player.Entity);

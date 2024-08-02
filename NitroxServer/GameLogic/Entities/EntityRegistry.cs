@@ -42,7 +42,7 @@ namespace NitroxServer.GameLogic.Entities
             {
                 return new(entitiesById.Values.Where(entity => entity is not GlobalRootEntity));
             }
-            return new List<Entity>(entitiesById.Values);            
+            return new List<Entity>(entitiesById.Values);
         }
 
         public List<Entity> GetEntities(List<NitroxId> ids)
@@ -88,7 +88,7 @@ namespace NitroxServer.GameLogic.Entities
 
         public void AddEntities(IEnumerable<Entity> entities)
         {
-            foreach(Entity entity in entities)
+            foreach (Entity entity in entities)
             {
                 AddEntity(entity);
             }
@@ -96,8 +96,8 @@ namespace NitroxServer.GameLogic.Entities
 
         /// <summary>
         /// Used for situations when some children may be new but others may not be. For
-        /// example a dropped InventoryEntity turns into a WorldEntity but keeps its 
-        /// battery inside (already known). 
+        /// example a dropped InventoryEntity turns into a WorldEntity but keeps its
+        /// battery inside (already known).
         /// </summary>
         /// <remarks>
         /// Updates entities if they already exist

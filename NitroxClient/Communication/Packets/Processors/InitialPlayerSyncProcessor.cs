@@ -41,6 +41,7 @@ namespace NitroxClient.Communication.Packets.Processors
             bool moreProcessorsToRun;
             do
             {
+                Log.Info("Running Pending Processors...");
                 yield return Multiplayer.Main.StartCoroutine(RunPendingProcessors());
 
                 moreProcessorsToRun = alreadyRan.Count < processors.Count;
